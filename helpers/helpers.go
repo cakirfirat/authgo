@@ -71,7 +71,6 @@ func GenerateToken(phone string) string {
 }
 
 func CreateOtp() string {
-	min := 0
-	max := 999999
-	return strconv.Itoa(rand.Intn(max-min) + min)
+	randNumber := strconv.Itoa(rand.Intn(999999))
+	return randNumber
 }
