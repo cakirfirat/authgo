@@ -4,14 +4,17 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,17 +25,18 @@ func CheckError(err error) {
 }
 
 func SendSms(phoneno, message string) {
+	_ = godotenv.Load("../.env")
 
 	url := "https://api.netgsm.com.tr/sms/send/get"
 	method := "POST"
 
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
-	_ = writer.WriteField("usercode", "*********")
-	_ = writer.WriteField("password", "*********")
+	_ = writer.WriteField("usercode", os.Getenv("USERNAME"))
+	_ = writer.WriteField("password", os.Getenv("PASSWORD"))
 	_ = writer.WriteField("gsmno", phoneno)
 	_ = writer.WriteField("message", message)
-	_ = writer.WriteField("msgheader", "*********")
+	_ = writer.WriteField("msgheader", os.Getenv("USERNAME"))
 	err := writer.Close()
 	CheckError(err)
 
@@ -73,4 +77,10 @@ func GenerateToken(phone string) string {
 func CreateOtp() string {
 	randNumber := strconv.Itoa(rand.Intn(999999))
 	return randNumber
+}
+
+func ConvertJson(message string) []byte {
+	msg, err := json.Marshal(message)
+	CheckError(err)
+	return msg
 }
