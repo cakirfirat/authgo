@@ -18,4 +18,3 @@ There is no database in this project. The data is stored in the map array contai
 
 * ```cd cmd```
 * ```go run main.go```
-thub.com/fvcproductions/1bfc2d4aecb01a834b46)

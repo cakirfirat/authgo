@@ -5,8 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"mime/multipart"
@@ -57,9 +55,7 @@ func SendSms(phoneno, message string) {
 
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
 	CheckError(err)
-	fmt.Println(string(body))
 }
 
 func GenerateToken(phone string) string {
