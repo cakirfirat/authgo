@@ -13,7 +13,9 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/text/language"
 )
 
 func CheckError(err error) {
@@ -79,4 +81,21 @@ func ConvertJson(message string) []byte {
 	msg, err := json.Marshal(message)
 	CheckError(err)
 	return msg
+}
+
+func Localizate(lang, text string) string {
+
+	bundle := i18n.NewBundle(language.English)
+	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+
+	switch lang {
+	case "tr-tr":
+		bundle.LoadMessageFile("../helpers/lang/tr-TR.json")
+	case "en-en":
+		bundle.LoadMessageFile("../helpers/lang/en-EN.json")
+	}
+
+	localizer := i18n.NewLocalizer(bundle, lang)
+
+	return localizer.MustLocalize(&i18n.LocalizeConfig{DefaultMessage: &i18n.Message{ID: text}})
 }

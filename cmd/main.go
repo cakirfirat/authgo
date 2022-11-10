@@ -18,7 +18,7 @@ func main() {
 	r.HandleFunc("/api/v1/login", LoginHandler).Methods("POST")
 	r.HandleFunc("/api/v1/forgotpassword", ForgotPasswordHandler).Methods("POST")
 	r.HandleFunc("/api/v1/sendotp", SendSmsAgainHandler).Methods("POST")
-	r.HandleFunc("/api/v1/checkotp", CheckOtpHandler).Methods("POST")
+	r.HandleFunc("/api/v1/verifyotp", CheckOtpHandler).Methods("POST")
 
 	server := &http.Server{
 		Addr:    ":8090",

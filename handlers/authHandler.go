@@ -6,9 +6,10 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 var userStore = make(map[int]User)
@@ -18,44 +19,45 @@ var i int = 0
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	i++
+	locale := r.Header.Get("Accept-Language")
 	username := r.FormValue("username")
 	phone_number := r.FormValue("phone")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	password_again := r.FormValue("password_again")
 
-	if password != password_again {
+	if username == "" || phone_number == "" || email == "" || password == "" {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(ConvertJson("Passwords not match!"))
+		w.Write(ConvertJson(Localizate(locale, "Missing data!")))
 
-		return
-	}
-
-	if username == "" || phone_number == "" || email == "" || password == "" || password_again == "" {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write(ConvertJson("Missing data!"))
 		return
 	}
 
 	for _, v := range userStore {
 		if v.Phone == phone_number || v.Id == i || v.Username == username || v.Email == email {
 			w.WriteHeader(http.StatusConflict)
-			w.Write(ConvertJson("Duplicate registration error!"))
+			w.Write(ConvertJson(Localizate(locale, "Duplicate registration error!")))
 			return
 		}
 	}
 	token := GenerateToken(phone_number)
 	otp := CreateOtp()
-	SendSms(phone_number, "Tek kullanımlık şifrenizi lütfen kimseyle paylaşmayınız. Şifreniz: "+otp)
+	created_time := time.Now()
+
+	expire := created_time.AddDate(0, 1, 0)
+
+	//SendSms(phone_number, Localizate(locale, "OTP Message")+otp)
+	fmt.Println(Localizate(locale, "OTP Message"))
 	var user = User{
-		Id:       i,
-		Token:    token,
-		Status:   0,
-		Username: username,
-		Phone:    phone_number,
-		Email:    email,
-		Password: password,
-		Otp:      otp,
+		Id:          i,
+		Token:       token,
+		Status:      0,
+		Username:    username,
+		Phone:       phone_number,
+		Email:       email,
+		Password:    password,
+		Otp:         otp,
+		CreatedDate: created_time,
+		ExpireDate:  expire,
 	}
 	userStore[i] = user
 
@@ -64,12 +66,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	err := enc.Encode(userStore)
 	CheckError(err)
 
-	ioutil.WriteFile("../database.txt", buf.Bytes(), 0644)
-
 	w.WriteHeader(http.StatusCreated)
-	//json_data, err := json.Marshal(user)
 	CheckError(err)
-	w.Write(ConvertJson("Registeration successfull."))
+	w.Write(ConvertJson(Localizate(locale, "Registeration successfull.")))
 
 }
 
@@ -127,10 +126,19 @@ func CheckOtpHandler(w http.ResponseWriter, r *http.Request) {
 				userUpdate.Otp = value.Otp
 				delete(userStore, id)
 				userStore[key] = userUpdate
-				data, err := json.Marshal(userStore[key])
+				//data, err := json.Marshal(userStore[key])
+				//CheckError(err)
+				//w.Write(data)
+				response_user := map[string]interface{}{
+					"id":     "delicious",
+					"token":  value.Token,
+					"status": status,
+				}
+				data, err := json.Marshal(response_user)
 				CheckError(err)
 				w.Write(data)
 			}
 		}
 	}
+
 }
