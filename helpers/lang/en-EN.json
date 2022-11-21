@@ -2,5 +2,9 @@
     "Hello World": "Hello Word",
     "OTP Message": "Please do not share your one-time password with anyone. Your one-time password: ",
     "Missing data!": "Missing data!",
-    "Duplicate registration error!": "Duplicate registration error!"
+    "Duplicate registration error!": "Duplicate registration error!",
+    "Registeration successfull.": "Registeration successfull.",
+    "Login failed": "Login failed",
+    "There is no data": "There is no data",
+    "New password created": "New password created"
 }

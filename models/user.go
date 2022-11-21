@@ -13,4 +13,5 @@ type User struct {
 	Otp         string
 	CreatedDate time.Time
 	ExpireDate  time.Time
+	UpdatedDate time.Time
 }
