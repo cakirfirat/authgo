@@ -3,9 +3,5 @@
   "Hello World": "Merhaba Dünya",
   "OTP Message": "Tek kullanımlık şifrenizi lütfen kimseyle paylaşmayınız. Şifreniz: ",
   "Missing data!": "Eksik data!",
-  "Duplicate registration error!": "Mükerrer kayıt!",
-  "Registeration successfull.": "Kayıt başarılı",
-  "Login failed": "Giriş başarısız",
-  "There is no data": "Kayıt yok",
-  "New password created": "Yeni parola oluşturuldu"
+  "Duplicate registration error!": "Mükerrer kayıt!"
 }

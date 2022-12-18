@@ -2,7 +2,6 @@ package main
 
 import (
 	. "authgo/handlers"
-	. "authgo/helpers"
 	"log"
 	"net/http"
 
@@ -20,9 +19,6 @@ func main() {
 	r.HandleFunc("/api/v1/forgotpassword", ForgotPasswordHandler).Methods("POST")
 	r.HandleFunc("/api/v1/sendotp", SendSmsAgainHandler).Methods("POST")
 	r.HandleFunc("/api/v1/verifyotp", CheckOtpHandler).Methods("POST")
-	r.HandleFunc("/api/v1/resetpassword/{id}", ResetPassword).Methods("GET")
-	//Example Validation
-	r.Handle("/api/v1/apis", ValidateJwt(ValidMethod)).Methods("GET")
 
 	server := &http.Server{
 		Addr:    ":8090",
